@@ -1,4 +1,4 @@
-package com.studytracker.schedule.exception;
+package com.studytracker.note.exception;
 
 import lombok.Getter;
 import lombok.Setter;

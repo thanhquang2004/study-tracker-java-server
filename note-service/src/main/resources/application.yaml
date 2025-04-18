@@ -1,0 +1,14 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /notes
+spring:
+  application:
+    name: note-service
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/note-service?authSource=admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
