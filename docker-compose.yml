@@ -1,80 +1,81 @@
+version: '3.8'
 
 services:
-  # API Gateway
-  api-gateway:
-    image: kien2201/api-gateway:latest  # Thay thế bằng image của bạn
-    ports:
-      - "8888:8888"
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-    networks:
-      - microservices-network
-    depends_on:
-      - identity-service
-      - profile-service
-      - notification-service
-      - schedule-service
-
-  # Identity Service (MySQL)
-  identity-service:
-    image: kien2201/identity-service:latest  # Thay thế bằng image của bạn
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/identity_service
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka:9092
-      - JWT_SIGNERKEY=1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij
-      - JWT_VALID-DURATION=3600
-      - JWT_REFRESHABLE-DURATION=36000
-      - APP_SERVICES_PROFILE=http://profile-service:8081/profile
-    networks:
-      - microservices-network
-    depends_on:
-      - mysql
-      - kafka
-
-  # Profile Service (MongoDB)
-  profile-service:
-    image: kien2201/profile-service:latest  # Thay thế bằng image của bạn
-    ports:
-      - "8081:8081"
-    environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongodb:27017/profile-service?authSource=admin
-    networks:
-      - microservices-network
-    depends_on:
-      - mongodb
-
-  # Notification Service (MongoDB + Kafka)
-  notification-service:
-    image: kien2201/notification-service:latest  # Thay thế bằng image của bạn
-    ports:
-      - "8082:8082"
-    environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongodb:27017/notification-service?authSource=admin
-      - SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka:9092
-      - SPRING_KAFKA_CONSUMER_GROUP-ID=notification-group
-      - NOTIFICATION_EMAIL_BREVO-URL=https://api.brevo.com
-      - NOTIFICATION_EMAIL_BREVO-APIKEY=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 # Thay thế bằng API key của bạn
-    networks:
-      - microservices-network
-    depends_on:
-      - mongodb
-      - kafka
-
-  # Schedule Service (MongoDB)
-  schedule-service:
-    image: kien2201/schedule-service:latest  # Thay thế bằng image của bạn
-    ports:
-      - "8083:8083"
-    environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongodb:27017/schedule-service?authSource=admin
-    networks:
-      - microservices-network
-    depends_on:
-      - mongodb
+  #  # API Gateway
+  #  api-gateway:
+  #    image: kien2201/api-gateway:latest  # Thay thế bằng image của bạn
+  #    ports:
+  #      - "8888:8888"
+  #    environment:
+  #      - SPRING_PROFILES_ACTIVE=prod
+  #    networks:
+  #      - microservices-network
+  #    depends_on:
+  #      - identity-service
+  #      - profile-service
+  #      - notification-service
+  #      - schedule-service
+  #
+  #  # Identity Service (MySQL)
+  #  identity-service:
+  #    image: kien2201/identity-service:latest  # Thay thế bằng image của bạn
+  #    ports:
+  #      - "8080:8080"
+  #    environment:
+  #      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/identity_service
+  #      - SPRING_DATASOURCE_USERNAME=root
+  #      - SPRING_DATASOURCE_PASSWORD=root
+  #      - SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka:9092
+  #      - JWT_SIGNERKEY=1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij
+  #      - JWT_VALID-DURATION=3600
+  #      - JWT_REFRESHABLE-DURATION=36000
+  #      - APP_SERVICES_PROFILE=http://profile-service:8081/profile
+  #    networks:
+  #      - microservices-network
+  #    depends_on:
+  #      - mysql
+  #      - kafka
+  #
+  #  # Profile Service (MongoDB)
+  #  profile-service:
+  #    image: kien2201/profile-service:latest  # Thay thế bằng image của bạn
+  #    ports:
+  #      - "8081:8081"
+  #    environment:
+  #      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongodb:27017/profile-service?authSource=admin
+  #    networks:
+  #      - microservices-network
+  #    depends_on:
+  #      - mongodb
+  #
+  #  # Notification Service (MongoDB + Kafka)
+  #  notification-service:
+  #    image: kien2201/notification-service:latest  # Thay thế bằng image của bạn
+  #    ports:
+  #      - "8082:8082"
+  #    environment:
+  #      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongodb:27017/notification-service?authSource=admin
+  #      - SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka:9092
+  #      - SPRING_KAFKA_CONSUMER_GROUP-ID=notification-group
+  #      - NOTIFICATION_EMAIL_BREVO-URL=https://api.brevo.com
+  #      - NOTIFICATION_EMAIL_BREVO-APIKEY=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 # Thay thế bằng API key của bạn
+  #    networks:
+  #      - microservices-network
+  #    depends_on:
+  #      - mongodb
+  #      - kafka
+  #
+  #  # Schedule Service (MongoDB)
+  #  schedule-service:
+  #    image: kien2201/schedule-service:latest  # Thay thế bằng image của bạn
+  #    ports:
+  #      - "8083:8083"
+  #    environment:
+  #      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongodb:27017/schedule-service?authSource=admin
+  #    networks:
+  #      - microservices-network
+  #    depends_on:
+  #      - mongodb
 
   # MySQL for Identity Service
   mysql:

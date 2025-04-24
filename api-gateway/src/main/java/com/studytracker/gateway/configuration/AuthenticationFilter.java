@@ -49,8 +49,9 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             "/webjars/*",
             "/identity/v3/api-docs",
             "/notification/v3/api-docs",
-            "/profile/v3/api-docs",
-            "/schedules/v3/api-docs"
+            "/profile/users/v3/api-docs",
+            "/schedules/v3/api-docs",
+            "/notes/v3/api-docs",
     };
 
     @Value("${app.api-prefix}")

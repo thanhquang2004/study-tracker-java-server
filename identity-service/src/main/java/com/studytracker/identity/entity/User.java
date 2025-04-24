@@ -1,5 +1,6 @@
 package com.studytracker.identity.entity;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -35,4 +36,10 @@ public class User {
 
     @ManyToMany
     Set<Role> roles;
+
+    @Column(name = "dob")
+    LocalDate dob;
+
+    @Column(name = "occupation", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    String occupation;
 }

@@ -3,6 +3,7 @@ package com.studytracker.identity.service;
 import java.util.HashSet;
 import java.util.List;
 
+import com.studytracker.identity.dto.request.UpdatePasswordRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,26 +83,44 @@ public class UserService {
         return userCreationResponse;
     }
 
-    public UserResponse getMyInfo() {
+    private User getMe(){
         var context = SecurityContextHolder.getContext();
-        String name = context.getAuthentication().getName();
+        String id = context.getAuthentication().getName();
+        return userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    }
 
-        User user = userRepository.findById(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
+    public UserResponse getMyInfo() {
+        User user = getMe();
         return userMapper.toUserResponse(user);
     }
+    public String updateMyPassword(UpdatePasswordRequest request) {
+        User user = getMe();
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_IS_INCORRECT);
+        }
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_IS_INCORRECT);
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        return "Password changed successfully";
+    }
+    public String updateMyInfo(UserUpdateRequest request){
+        User user = getMe();
+        userMapper.updateUser(user, request);
+        return "success";
+    }
+
+
 
     public UserResponse updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
         userMapper.updateUser(user, request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        var roles = roleRepository.findAllById(request.getRoles());
-        user.setRoles(new HashSet<>(roles));
-
         return userMapper.toUserResponse(userRepository.save(user));
     }
+
+
+
 
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(String userId) {

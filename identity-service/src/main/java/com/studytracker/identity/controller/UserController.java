@@ -2,6 +2,7 @@ package com.studytracker.identity.controller;
 
 import java.util.List;
 
+import com.studytracker.identity.dto.request.UpdatePasswordRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:8888")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -52,6 +54,18 @@ public class UserController {
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
+                .build();
+    }
+    @PutMapping("/my-info")
+    ApiResponse<Object> updateMyInfo(@RequestBody @Valid UserUpdateRequest request) {
+        return ApiResponse.builder()
+                .result(userService.updateMyInfo(request))
+                .build();
+    }
+    @PatchMapping("/my-info/password")
+    ApiResponse<Object> updateMyInfoPassword(@RequestBody @Valid UpdatePasswordRequest request) {
+        return ApiResponse.builder()
+                .result(userService.updateMyPassword(request))
                 .build();
     }
 

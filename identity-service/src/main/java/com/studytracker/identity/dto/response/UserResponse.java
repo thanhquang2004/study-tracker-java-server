@@ -18,7 +18,6 @@ public class UserResponse {
     String email;
     boolean emailVerified;
     boolean active;
-    String password;
     String name;
     String gender;
     Integer age;

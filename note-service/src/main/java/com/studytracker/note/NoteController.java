@@ -20,11 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@CrossOrigin(origins = "http://localhost:8888")
 public class NoteController {
 
     NoteService noteService;
 
-    @PostMapping("/create-schedule")
+    @PostMapping("/create-note")
     public ApiResponse<NoteResponse> createNotes(
             @Valid @RequestBody NoteRequest request) {
         return ApiResponse.<NoteResponse>builder()
@@ -32,7 +33,7 @@ public class NoteController {
                 .build();
     }
 
-    @GetMapping("/get-all-schedules")
+    @GetMapping("/get-all-note")
     @Operation(summary = "Lấy tất cả")
     public ResponseEntity<List<Note>> getAllNotes(
             @RequestParam(value = "page", required = false) Integer page,
@@ -71,7 +72,7 @@ public class NoteController {
         return ResponseEntity.ok(schedule);
     }
 
-    @GetMapping("/get-schedules-by/{userId}")
+    @GetMapping("/get-note-by/{userId}")
     public List<NoteResponse> getNotesByUserId(@PathVariable String userId) {
         return noteService.getNoteByUserId(userId);
     }

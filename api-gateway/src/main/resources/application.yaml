@@ -8,8 +8,8 @@ spring:
   application:
     name: api-gateway
   cloud:
-
     gateway:
+
       routes:
         - id: identity_service
           uri: http://localhost:8080
@@ -41,12 +41,18 @@ spring:
             - Path=${app.api-prefix}/orders/**
           filters:
             - StripPrefix=2
-        - id: order-service
+        - id: note-service
           uri: http://localhost:8085
           predicates:
             - Path=${app.api-prefix}/notes/**
           filters:
             - StripPrefix=2
+      cors:
+        allowedOrigins:
+          - "http://localhost:8888"  # Đảm bảo rằng gateway cho phép origin từ localhost:8888
+        allowedMethods: "*"
+        allowedHeaders: "*"
+        allowCredentials: true
 
 
 springdoc:
@@ -56,7 +62,7 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     urls:
-      - url: "${app.api-prefix}/identity/v3/api-docs"
+      - url: "/api/v1/identity/v3/api-docs"
         name: "Identity Service"
       - url: "${app.api-prefix}/profile/users/v3/api-docs"
         name: "Profile Service"
@@ -68,3 +74,6 @@ springdoc:
         name: "Order Service"
       - url: "${app.api-prefix}/notes/v3/api-docs"
         name: "Note Service"
+    csrf:
+      enabled: true
+
